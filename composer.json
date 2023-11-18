@@ -1,0 +1,25 @@
+{
+  "name": "mustafasahin/mwt-token",
+  "description": "Custom MWT Token Library for PHP",
+  "type": "library",
+  "version": "1.0.0",
+  "require": {
+    "php": "^7.4||^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "MwtToken\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Mustafa Sahin",
+      "email": "contact@mustafasahin.dev"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  },
+  "minimum-stability": "stable",
+  "license": "MIT"
+}
