@@ -3,10 +3,24 @@
 require_once 'Token.php';
 
 class TokenManager {
+    
+    private static $instance = null;
+    
     private $tokens = [];
     private $strategy;
 
-    public function __construct(EncodingStrategyInterface $strategy) {
+    private function __construct() { }
+    private function __clone() { }
+
+
+    public static function getInstance(): TokenManager {
+        if (self::$instance === null) {
+            self::$instance = new TokenManager();
+        }
+        return self::$instance;
+    }
+
+    public function setStrategy(EncodingStrategyInterface $strategy) {
         $this->strategy = $strategy;
     }
 

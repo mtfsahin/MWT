@@ -9,12 +9,20 @@ class TokenFactory {
         $this->strategy = $strategy;
     }
 
-    public function createToken($payload, $expiryDate = '+1 hour') {
+    public function createToken($payload, string $expiryDate = '+1 hour') {
+        if (!$this->isValidPayload($payload)) {
+            throw new InvalidArgumentException('Invalid payload.');
+        }
+
         try {
             $token = new Token($payload, $expiryDate);
             return $this->strategy->encode($token->getPayload());
         } catch (Exception $e) {
             throw new Exception('Token creation failed: ' . $e->getMessage());
         }
+    }
+
+    private function isValidPayload($payload): bool {
+        return true;
     }
 }

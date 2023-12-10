@@ -7,25 +7,24 @@ require_once 'Strategy/EncodingStrategyInterface.php';
 require_once 'Strategy/PlainEncodingStrategy.php';
 require_once 'Strategy/EncryptedEncodingStrategy.php';
 
-$encryptedStrategy = new EncryptedEncodingStrategy("34sdg234");
-$managerEncrypted = new TokenManager($encryptedStrategy);
-$encryptedMWT = $managerEncrypted->encodeToken(['test' => 'encrypted']);
-$decodedEncryptedPayload = $managerEncrypted->decodeToken($encryptedMWT);
+// EncryptedEncodingStrategy usage
+$secretKey = 'your-very-secure-secret-key';
+$enhancedStrategy = new EncryptedEncodingStrategy($secretKey);
 
-echo "Encrypted MWT: " . $encryptedMWT . "\n";
-print_r('</br>');
-echo "Decoded Encrypted Payload: ";
+$payload = ['data' => 'This is a test'];
+$encoded = $enhancedStrategy->encode($payload);
 
-print_r($decodedEncryptedPayload);
-print_r('</br>');
+$decoded = $enhancedStrategy->decode($encoded);
+echo 'Encoded: ' . $encoded . '\n';
+echo 'Decoded: ';
+print_r($decoded);
 
-
+// PlainEncodingStrategy usage
 $plainStrategy = new PlainEncodingStrategy();
-$managerPlain = new TokenManager($plainStrategy);
-$plainMWT = $managerPlain->encodeToken(['test' => 'plain']);
-$decodedPlainPayload = $managerPlain->decodeToken($plainMWT);
 
-echo "Plain MWT: " . $plainMWT . "\n";
-print_r('</br>');
-echo "Decoded Plain Payload: ";
-print_r($decodedPlainPayload);
+$plainEncoded = $plainStrategy->encode($payload);
+
+$plainDecoded = $plainStrategy->decode($plainEncoded);
+echo '\nPlain Encoded: ' . $plainEncoded . '\n';
+echo 'Plain Decoded: ';
+print_r($plainDecoded);

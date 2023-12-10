@@ -12,8 +12,12 @@ class Token {
         return $this->payload;
     }
 
-    private function setExpiryDate($expiryDate) {
-        $this->expiryDate = new DateTime($expiryDate);
+    private function setExpiryDate(string $expiryDate) {
+        try {
+            $this->expiryDate = new DateTime($expiryDate);
+        } catch (Exception $e) {
+            throw new InvalidArgumentException("Invalid expiry date format.");
+        }
     }
 
     public function isExpired() {

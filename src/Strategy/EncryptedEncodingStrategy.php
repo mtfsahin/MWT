@@ -7,11 +7,11 @@ class EncryptedEncodingStrategy implements EncodingStrategyInterface {
         $this->secretKey = $secretKey;
     }
 
-    public function encode($payload) {
-        $header = json_encode(['alg' => 'HS256', 'typ' => 'JWT']);
+    public function encode($payload, $additionalHeaders = []) {
+        $header = json_encode(array_merge(['alg' => 'HS256', 'typ' => 'JWT'], $additionalHeaders));
         $base64UrlHeader = $this->base64UrlEncode($header);
         $base64UrlPayload = $this->base64UrlEncode(json_encode($payload));
-        $signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $this->secretKey, true);
+        $signature = hash_hmac('sha512', $base64UrlHeader . "." . $base64UrlPayload, $this->secretKey, true);
         $base64UrlSignature = $this->base64UrlEncode($signature);
         return $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
     }
@@ -20,8 +20,8 @@ class EncryptedEncodingStrategy implements EncodingStrategyInterface {
         list($base64UrlHeader, $base64UrlPayload, $base64UrlSignature) = explode('.', $jwt);
         $data = $base64UrlHeader . '.' . $base64UrlPayload;
 
-        $signature = base64_decode($base64UrlSignature);
-        $expectedSignature = hash_hmac('sha256', $data, $this->secretKey, true);
+        $signature = $this->base64UrlDecode($base64UrlSignature);
+        $expectedSignature = hash_hmac('sha512', $data, $this->secretKey, true);
 
         if (!hash_equals($expectedSignature, $signature)) {
             throw new Exception('Invalid token signature');
